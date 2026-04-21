@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loan Application Form - SohCahToa Holdings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <img class="logo-img" src="1765290230515.jpeg" alt="SohCahToa Holdings" />
+    <span class="header-badge">HR Loan Application Portal</span>
+  </header>
+
+  <!-- CONTACT BAR -->
+  <div class="contact-bar">
+    <span>&#128205; 196, Bishop Oluwole Street (Sunu Assurance building), Victoria Island, Lagos</span>
+    <span class="dot">&bull;</span>
+    <span>&#9993; info&#64;sohcahtoalimited.com</span>
+    <span class="dot">&bull;</span>
+    <span>&#127760; <a href="http://www.sohcahtoalimited.com" target="_blank">www.sohcahtoalimited.com</a></span>
+  </div>
+
+  <!-- MAIN -->
+  <div class="container">
+    <div class="form-card">
+
+      <!-- Hero -->
+      <div class="form-hero">
+        <div class="hero-tag">Employee Finance</div>
+        <h2>Loan Application Form</h2>
+        <p>Complete all required fields. Your submission will be reviewed by HR within 3&ndash;5 working days.</p>
+        <div class="orange-bar"></div>
+      </div>
+
+      <div class="form-body">
+        <form id="loanForm" novalidate>
+
+          <!-- SECTION 1: Employee Information -->
+          <div class="section-header">
+            <div class="section-num">1</div>
+            <h3>Employee Information</h3>
+            <div class="section-line"></div>
+          </div>
+
+          <div class="field-row cols-3">
+            <div class="field">
+              <label>Title <span class="req">*</span></label>
+              <select id="title" required>
+                <option value="">Select</option>
+                <option>Mr.</option>
+                <option>Mrs.</option>
+                <option>Ms.</option>
+              </select>
+              <span class="err-msg">Required</span>
+            </div>
+            <div class="field">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="firstName" placeholder="e.g. Anuoluwapo" required />
+              <span class="err-msg">Required</span>
+            </div>
+            <div class="field">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="lastName" placeholder="e.g. Fanegan" required />
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Employee Email <span class="req">*</span></label>
+              <input type="email" id="employeeEmail" placeholder="e.g. anu@company.com" required />
+              <span class="err-msg">Please enter a valid email address</span>
+            </div>
+            <div class="field">
+              <label>Department <span class="req">*</span></label>
+              <select id="department" required>
+                <option value="">Select department</option>
+                <option>Human Resources/Admin</option>
+                <option>Project Management Office</option>
+                <option>Product</option>
+                <option>Finance</option>
+                <option>Operations</option>
+                <option>Sales</option>
+                <option>Legal</option>
+                <option>Information Technology (IT)</option>
+                <option>Internal Control</option>
+                <option>Compliance</option>
+                <option>SohCahToa Finance</option>
+                <option>Corporate Communications</option>
+                <option>Office of the GMD</option>
+                <option>Office of the ED</option>
+                <option>SohCahToa Finance</option>
+              </select>
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Designation <span class="req">*</span></label>
+              <input type="text" id="designation" placeholder="e.g. Product Manager" required />
+              <span class="err-msg">Required</span>
+            </div>
+            <div class="field">
+              <label>Date of Employment <span class="req">*</span></label>
+              <input type="date" id="dateEmployed" required />
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Confirmed Permanent Staff? <span class="req">*</span></label>
+              <select id="isPermanent" required>
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="eligibility-alert" id="eligibilityAlert">
+            &#9888;&nbsp; Only confirmed permanent staff are eligible to apply for a staff loan.
+            Please speak to HR if you have questions about your employment status.
+          </div>
+
+          <!-- SECTION 2: Loan Details -->
+          <div class="section-header">
+            <div class="section-num">2</div>
+            <h3>Loan Details</h3>
+            <div class="section-line"></div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Desired Loan Amount (&#8358;) <span class="req">*</span></label>
+              <input type="text" id="loanAmount" inputmode="numeric" placeholder="e.g. 500,000" required />
+              <span class="err-msg">Required</span>
+            </div>
+            <div class="field">
+              <label>Monthly Salary (&#8358;) <span class="req">*</span></label>
+              <input type="text" id="monthlySalary" inputmode="numeric" placeholder="e.g. 250,000" required />
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="cb-label">Loan Purpose <span style="color:var(--orange)">*</span></div>
+          <div class="checkbox-group" id="loanPurposeGroup">
+            <label><input type="checkbox" value="Education" /><span>Education</span></label>
+            <label><input type="checkbox" value="Investment" /><span>Investment</span></label>
+            <label><input type="checkbox" value="Rent" /><span>Rent</span></label>
+            <label><input type="checkbox" value="Home Improvement" /><span>Home Improvement</span></label>
+            <label><input type="checkbox" value="Business" /><span>Business</span></label>
+            <label><input type="checkbox" value="Other" /><span>Other</span></label>
+          </div>
+
+          <div class="field-row cols-1" id="otherPurposeWrapper" style="display:none;">
+            <div class="field">
+              <label>Please specify <span class="req">*</span></label>
+              <input type="text" id="otherPurpose" placeholder="Describe the purpose of the loan..." />
+              <span class="err-msg">Please specify the loan purpose</span>
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Repayment Period <span class="req">*</span></label>
+              <select id="repaymentPeriod" required>
+                <option value="">Select period</option>
+                <option>1 month</option>
+                <option>3 months</option>
+                <option>4 months</option>
+                <option>5 months</option>
+                <option>6 months</option>
+              </select>
+              <span class="err-msg">Required</span>
+            </div>
+            <div class="field">
+              <label>Monthly Repayment Amount (&#8358;)</label>
+              <input type="text" id="monthlyRepayment" readonly placeholder="Auto-calculated (zero interest)" />
+            </div>
+          </div>
+
+          <div class="field-row cols-2">
+            <div class="field">
+              <label>Currently Indebted to the Company? <span class="req">*</span></label>
+              <select id="isIndebted" required>
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+              <span class="err-msg">Required</span>
+            </div>
+          </div>
+
+          <div class="field-row cols-1" id="debtDetailsWrapper" style="display:none;">
+            <div class="field">
+              <label>Debt Details</label>
+              <textarea id="debtDetails" rows="3" placeholder="Describe the existing debt..."></textarea>
+            </div>
+          </div>
+
+          <!-- SECTION 3: Consent -->
+          <div class="section-header">
+            <div class="section-num">3</div>
+            <h3>Consent &amp; Declaration</h3>
+            <div class="section-line"></div>
+          </div>
+
+          <div class="consent-block">
+            <p>I hereby acknowledge that I have requested a loan and I agree to have the loan deducted
+               immediately from my monthly net salary until the loan is fully repaid. I understand that
+               if I leave the company before the loan is fully repaid, the remaining balance will be
+               deducted from my final salary. Furthermore, I agree that I will be held responsible for
+               any missed or late payments and that the company may take appropriate action to recover
+               the outstanding amount.</p>
+            <label class="consent-check">
+              <input type="checkbox" id="consent1" />
+              <span>I agree to the above deduction and repayment terms.</span>
+            </label>
+          </div>
+
+          <div class="consent-block">
+            <p>I certify that the information provided in this loan application form is accurate and
+               complete to the best of my knowledge as of the date of this application submission.
+               I understand that any false statements or misrepresentations may result in the rejection
+               of my loan application, or in the termination of my employment.</p>
+            <label class="consent-check">
+              <input type="checkbox" id="consent2" />
+              <span>I certify that all information provided is accurate and complete.</span>
+            </label>
+          </div>
+
+          <div class="submit-area">
+            <button type="submit" class="btn-submit" id="submitBtn">
+              Send Application
+              <span class="spinner"></span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon"></span>
+    <div class="toast-body">
+      <strong id="toastTitle"></strong>
+      <small id="toastMsg"></small>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
