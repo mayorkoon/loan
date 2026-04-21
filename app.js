@@ -6,7 +6,7 @@
 const EMAILJS_PUBLIC_KEY  = 'Cy1dc01hIWUDg05Yh';
 const EMAILJS_SERVICE_ID  = 'service_no3de7v';
 const EMAILJS_TEMPLATE_ID = 'template_hyonblk';
-const HR_GROUP_EMAIL      = 'hr@sohcahtoalimited.com';
+const HR_GROUP_EMAIL      = 'hr@sohcahtoalimited.com'; 
 
 emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -49,15 +49,35 @@ function attachNumberFormatter(id) {
   });
 }
 
-// ── Auto-calculate monthly repayment (zero-interest = amount / months)
+// ── Auto-calculate monthly repayment
+// SohCahToa Finance: 2% monthly interest (amortisation formula)
+// All other departments: zero interest (amount / months)
 function recalcRepayment() {
-  var amountRaw = parseFormattedNumber(document.getElementById('loanAmount').value);
-  var period    = document.getElementById('repaymentPeriod').value;
-  var months    = PERIOD_MONTHS[period];
-  var repayEl   = document.getElementById('monthlyRepayment');
+  var amountRaw  = parseFormattedNumber(document.getElementById('loanAmount').value);
+  var period     = document.getElementById('repaymentPeriod').value;
+  var months     = PERIOD_MONTHS[period];
+  var repayEl    = document.getElementById('monthlyRepayment');
+  var dept       = document.getElementById('department').value;
+  var isFinance  = dept === 'SohCahToa Finance';
+
+  // Update label hint
+  var labelEl = repayEl.closest('.field').querySelector('label');
+  if (labelEl) {
+    labelEl.innerHTML = isFinance
+      ? 'Monthly Repayment Amount (&#8358;) <small style="color:var(--orange);font-weight:500">(2% monthly interest)</small>'
+      : 'Monthly Repayment Amount (&#8358;)';
+  }
 
   if (amountRaw > 0 && months) {
-    var monthly = Math.ceil(amountRaw / months);
+    var monthly;
+    if (isFinance) {
+      var r = 0.02;
+      // Standard amortisation: PMT = P * r * (1+r)^n / ((1+r)^n - 1)
+      var factor = Math.pow(1 + r, months);
+      monthly = Math.ceil(amountRaw * r * factor / (factor - 1));
+    } else {
+      monthly = Math.ceil(amountRaw / months);
+    }
     repayEl.value = monthly.toLocaleString('en-NG');
   } else {
     repayEl.value = '';
@@ -192,9 +212,10 @@ document.addEventListener('DOMContentLoaded', function () {
   attachNumberFormatter('loanAmount');
   attachNumberFormatter('monthlySalary');
 
-  // Auto-recalculate repayment when amount or period changes
+  // Auto-recalculate repayment when amount, period, or department changes
   document.getElementById('loanAmount').addEventListener('input', recalcRepayment);
   document.getElementById('repaymentPeriod').addEventListener('change', recalcRepayment);
+  document.getElementById('department').addEventListener('change', recalcRepayment);
 
   document.getElementById('employeeEmail').addEventListener('blur', function () {
     if (this.value.trim() !== '') {
@@ -272,6 +293,27 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.classList.add('loading');
     btn.childNodes[0].textContent = 'Sending\u2026 ';
 
+    // Capture form screenshot before building data
+    var screenshotDataUrl = '';
+    try {
+      var canvas = await html2canvas(document.getElementById('loanForm'), {
+        scale: 0.6,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      });
+      // Resize to max 560px wide to keep base64 under EmailJS 50KB limit
+      var maxW = 560;
+      var ratio = Math.min(1, maxW / canvas.width);
+      var resized = document.createElement('canvas');
+      resized.width  = Math.round(canvas.width  * ratio);
+      resized.height = Math.round(canvas.height * ratio);
+      resized.getContext('2d').drawImage(canvas, 0, 0, resized.width, resized.height);
+      screenshotDataUrl = resized.toDataURL('image/jpeg', 0.45);
+    } catch (screenshotErr) {
+      console.warn('Screenshot capture failed:', screenshotErr);
+    }
+
     var loanAmountRaw    = parseFormattedNumber(document.getElementById('loanAmount').value);
     var salaryRaw        = parseFormattedNumber(document.getElementById('monthlySalary').value);
     var repaymentRaw     = parseFormattedNumber(document.getElementById('monthlyRepayment').value);
@@ -300,6 +342,18 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     data.form_snapshot = buildFormSnapshot(data);
+
+    if (screenshotDataUrl) {
+      data.form_snapshot +=
+        '<div style="font-family:Arial,sans-serif;max-width:680px;margin:16px auto 0;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #E0DBD6;">'
+        + '<div style="background:#1E1E1E;padding:14px 28px;border-bottom:3px solid #C8401A;">'
+        +   '<p style="margin:0;font-size:11px;color:#C8401A;letter-spacing:2px;text-transform:uppercase;font-weight:600;">Form Screenshot</p>'
+        + '</div>'
+        + '<div style="padding:16px 28px;">'
+        +   '<img src="' + screenshotDataUrl + '" style="width:100%;border-radius:4px;border:1px solid #E0DBD6;" alt="Form Screenshot" />'
+        + '</div>'
+        + '</div>';
+    }
 
     try {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
