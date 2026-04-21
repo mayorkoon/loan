@@ -6,7 +6,7 @@
 const EMAILJS_PUBLIC_KEY  = 'Cy1dc01hIWUDg05Yh';
 const EMAILJS_SERVICE_ID  = 'service_no3de7v';
 const EMAILJS_TEMPLATE_ID = 'template_hyonblk';
-const HR_GROUP_EMAIL      = 'hr@sohcahtoalimited.com'; 
+const HR_GROUP_EMAIL      = 'Anuoluwapo.fanegan@sohcahtoaholdings.com'; //Anuoluwapo.fanegan@sohcahtoaholdings.com 
 
 emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -343,17 +343,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     data.form_snapshot = buildFormSnapshot(data);
 
-    if (screenshotDataUrl) {
-      data.form_snapshot +=
-        '<div style="font-family:Arial,sans-serif;max-width:680px;margin:16px auto 0;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #E0DBD6;">'
-        + '<div style="background:#1E1E1E;padding:14px 28px;border-bottom:3px solid #C8401A;">'
-        +   '<p style="margin:0;font-size:11px;color:#C8401A;letter-spacing:2px;text-transform:uppercase;font-weight:600;">Form Screenshot</p>'
-        + '</div>'
-        + '<div style="padding:16px 28px;">'
-        +   '<img src="' + screenshotDataUrl + '" style="width:100%;border-radius:4px;border:1px solid #E0DBD6;" alt="Form Screenshot" />'
-        + '</div>'
-        + '</div>';
-    }
 
     try {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data);
